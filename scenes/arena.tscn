@@ -2,8 +2,27 @@
 
 [ext_resource type="Script" uid="uid://b4b6aaleanmjd" path="res://scripts/arena.gd" id="1_wl4x5"]
 [ext_resource type="PackedScene" uid="uid://c3yb2eql5pwpp" path="res://scenes/player.tscn" id="2_olpmc"]
+[ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemy.tscn" id="3_olpmc"]
+
+[sub_resource type="Environment" id="Environment_wl4x5"]
+background_mode = 3
+glow_enabled = true
+glow_bloom = 0.37
+glow_blend_mode = 0
 
 [node name="Arena" type="Node2D" unique_id=86317714]
 script = ExtResource("1_wl4x5")
 
 [node name="Player" parent="." unique_id=1334363141 instance=ExtResource("2_olpmc")]
+
+[node name="Enemy" parent="." unique_id=81046350 instance=ExtResource("3_olpmc")]
+position = Vector2(263, 369)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1136972443]
+environment = SubResource("Environment_wl4x5")
+
+[node name="EnemySpawnTimer" type="Timer" parent="." unique_id=220998081]
+wait_time = 0.8
+autostart = true
+
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]

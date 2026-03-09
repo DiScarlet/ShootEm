@@ -15,3 +15,8 @@ func _process(delta: float) -> void:
 		look_once = false 
 		
 	global_position += VELOCITY.rotated(rotation) * SPEED * delta
+
+
+#event functions
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	queue_free()

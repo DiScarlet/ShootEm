@@ -9,3 +9,9 @@ position = Vector2(640, 360)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_g2els")
 script = ExtResource("2_qhqgy")
+
+[node name="Timer_Reload" type="Timer" parent="." unique_id=1687320784]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="timeout" from="Timer_Reload" to="." method="_on_timer_reload_timeout"]

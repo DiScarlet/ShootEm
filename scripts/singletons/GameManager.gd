@@ -3,7 +3,8 @@ extends Node
 #VARS
 #locals(for GameManager)/globals(for all nodes)
 var node_creation_parent = null
-
+	#characters/npcs
+var player = null
 
 
 #FUNCS
