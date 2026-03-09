@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c3yb2eql5pwpp"]
+
+[ext_resource type="Texture2D" uid="uid://jtgxew27578n" path="res://assets/sprites/Square.png" id="1_g2els"]
+[ext_resource type="Script" uid="uid://fa1hqhy4lf0g" path="res://scripts/player.gd" id="2_qhqgy"]
+
+[node name="Player" type="Sprite2D" unique_id=1334363141]
+modulate = Color(0.78993, 0.16499865, 0.18292427, 1)
+position = Vector2(640, 360)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_g2els")
+script = ExtResource("2_qhqgy")

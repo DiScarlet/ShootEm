@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b82kjfjjqgiey"]
+
+[ext_resource type="Script" uid="uid://b4b6aaleanmjd" path="res://scripts/arena.gd" id="1_wl4x5"]
+[ext_resource type="PackedScene" uid="uid://c3yb2eql5pwpp" path="res://scenes/player.tscn" id="2_olpmc"]
+
+[node name="Arena" type="Node2D" unique_id=86317714]
+script = ExtResource("1_wl4x5")
+
+[node name="Player" parent="." unique_id=1334363141 instance=ExtResource("2_olpmc")]
