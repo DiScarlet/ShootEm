@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://c0i3w246rp8n4" path="res://scripts/blood_particles.gd" id="2_n323q"]
 
 [node name="BloodParticles" type="CPUParticles2D" unique_id=2015632048]
+z_index = -5
 amount = 15
 texture = ExtResource("1_4enpv")
 lifetime = 0.2

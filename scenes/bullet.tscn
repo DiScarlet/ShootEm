@@ -14,7 +14,7 @@ script = ExtResource("2_l5glv")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1689495765]
 
-[node name="Hitbox" type="Area2D" parent="." unique_id=1953835885 groups=["Enemy_damager"]]
+[node name="Hitbox" type="Area2D" parent="." unique_id=1953835885 groups=["EnemyDamager"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=635967943]
 shape = SubResource("RectangleShape2D_y25gk")

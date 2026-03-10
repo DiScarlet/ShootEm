@@ -29,7 +29,8 @@ enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
 
 [global_group]
 
-Enemy_damager=""
+Enemy=""
+EnemyDamager=""
 
 [input]
 

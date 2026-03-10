@@ -1,8 +1,11 @@
 extends Node
 
 #VARS
+#consts
+const WINDOW_SIZE = Vector2i(1280, 720)
 #locals(for GameManager)/globals(for all nodes)
 var node_creation_parent = null
+var points = 0
 	#characters/npcs
 var player = null
 

@@ -24,14 +24,16 @@ func _process(delta: float) -> void:
 	global_position += velocity * SPEED * delta
 	
 	if hp <= 0:
+		GameManager.points += 10
 		if GameManager.node_creation_parent != null:
-			GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
+			var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
+			blood_part_instance.rotation = velocity.angle()
 		queue_free()
 
 
 #event functions
 func _on_hitbox_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Enemy_damager"):
+	if area.is_in_group("EnemyDamager"):
 		modulate = Color(1, 1, 1)
 		velocity = -velocity * 4
 		hp -= 1

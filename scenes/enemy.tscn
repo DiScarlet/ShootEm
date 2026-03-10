@@ -13,7 +13,7 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_7p1mj")
 script = ExtResource("2_md0e3")
 
-[node name="Hitbox" type="Area2D" parent="." unique_id=14445288]
+[node name="Hitbox" type="Area2D" parent="." unique_id=14445288 groups=["Enemy"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=989620867]
 shape = SubResource("RectangleShape2D_md0e3")

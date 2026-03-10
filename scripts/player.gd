@@ -3,6 +3,9 @@ extends Sprite2D
 #VARS
 #consts
 const SPEED = 150
+const RESPAWN_TIME = 1.0
+const WINDOW_SIZE = GameManager.WINDOW_SIZE
+const PLAYER_SIZE = Vector2i(24, 24)
 #locals
 	#player
 var velocity = Vector2()
@@ -25,6 +28,10 @@ func _process(delta: float) -> void:
 	velocity.x = int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))	
 	velocity.y = int(Input.is_action_pressed("move_down")) - int(Input.is_action_pressed("move_up"))	
 	
+	var half_size = PLAYER_SIZE / 2
+	global_position.x = clamp(global_position.x, half_size.x, WINDOW_SIZE.x - half_size.x)
+	global_position.y = clamp(global_position.y, half_size.y, WINDOW_SIZE.y - half_size.y)
+	
 	velocity = velocity.normalized()
 	global_position += SPEED * velocity * delta
 	
@@ -41,3 +48,10 @@ func start_reload():
 #event functions
 func _on_timer_reload_timeout() -> void:
 	can_shoot = true
+
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Enemy"):
+		can_shoot = false
+		visible = false
+		await(get_tree().create_timer(RESPAWN_TIME).timeout)
+		get_tree().reload_current_scene()
