@@ -6,7 +6,9 @@ const WINDOW_SIZE = GameManager.WINDOW_SIZE
 const ENEMY_SPAWN_OFFSET = 160
 #locals
 var enemy_1 = preload("res://scenes/enemy.tscn")
-
+#Godot elements
+@onready var interval_timer: Timer = $IntervalTimer
+@onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
 
 
 #FUNCS
@@ -14,6 +16,7 @@ var enemy_1 = preload("res://scenes/enemy.tscn")
 func _ready() -> void:
 	GameManager.node_creation_parent = self
 	GameManager.points = 0
+	interval_timer.wait_time = GameManager.DIFFICULTY_INTERVAL
 
 func _exit_tree() -> void:
 	GameManager.node_creation_parent = null
@@ -44,3 +47,8 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	var enemy_position = Vector2(x ,y)
 		
 	GameManager.instance_node(enemy_1, enemy_position, GameManager.node_creation_parent)
+
+func _on_interval_timer_timeout() -> void:
+	if enemy_spawn_timer.wait_time >= GameManager.MAX_DIFFICULTY:
+		var new_time = enemy_spawn_timer.wait_time * 0.95
+		enemy_spawn_timer.wait_time = round(new_time * 1000.0) / 1000.0

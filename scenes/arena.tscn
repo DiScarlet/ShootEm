@@ -3,7 +3,9 @@
 [ext_resource type="Script" uid="uid://b4b6aaleanmjd" path="res://scripts/arena.gd" id="1_wl4x5"]
 [ext_resource type="PackedScene" uid="uid://c3yb2eql5pwpp" path="res://scenes/player.tscn" id="2_olpmc"]
 [ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemy.tscn" id="3_olpmc"]
-[ext_resource type="Script" uid="uid://q0l3nqxud6n2" path="res://scripts/score.gd" id="4_xdvfk"]
+[ext_resource type="Script" uid="uid://q0l3nqxud6n2" path="res://scripts/UI/score.gd" id="4_xdvfk"]
+[ext_resource type="Script" uid="uid://bqbhw16j16xcc" path="res://scripts/UI/high_score.gd" id="5_4ag8t"]
+[ext_resource type="Script" uid="uid://b0xdbtaudahbx" path="res://scripts/camera_2d.gd" id="5_7ft05"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
@@ -24,6 +26,7 @@ position = Vector2(263, 369)
 environment = SubResource("Environment_wl4x5")
 
 [node name="EnemySpawnTimer" type="Timer" parent="." unique_id=220998081]
+wait_time = 3.0
 autostart = true
 
 [node name="UI" type="Node2D" parent="." unique_id=1367308604]
@@ -45,4 +48,48 @@ theme_override_font_sizes/font_size = 50
 text = "100"
 script = ExtResource("4_xdvfk")
 
+[node name="HighScoreVal" type="Label" parent="UI/Control" unique_id=2140397873]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -59.0
+offset_top = -41.0
+offset_right = -19.0
+offset_bottom = -13.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "100"
+script = ExtResource("5_4ag8t")
+
+[node name="HighScoreText" type="Label" parent="UI/Control" unique_id=1479550535]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -186.0
+offset_top = -39.0
+offset_right = -100.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 30
+text = "High score:"
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=885219624]
+position = Vector2(640, 360)
+script = ExtResource("5_7ft05")
+
+[node name="ScreenShakeTimer" type="Timer" parent="Camera2D" unique_id=800695450]
+
+[node name="IntervalTimer" type="Timer" parent="." unique_id=1689908458]
+autostart = true
+
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
+[connection signal="timeout" from="Camera2D/ScreenShakeTimer" to="Camera2D" method="_on_screen_shake_timer_timeout"]
+[connection signal="timeout" from="IntervalTimer" to="." method="_on_interval_timer_timeout"]

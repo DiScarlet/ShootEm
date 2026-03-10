@@ -12,6 +12,7 @@ var velocity = Vector2()
 	#bullet
 var bullet = preload("res://scenes/bullet.tscn")
 var can_shoot = true
+var is_dead = false
 #Godot elements
 @onready var timer_reload: Timer = $Timer_Reload
 
@@ -29,13 +30,13 @@ func _process(delta: float) -> void:
 	velocity.y = int(Input.is_action_pressed("move_down")) - int(Input.is_action_pressed("move_up"))	
 	
 	var half_size = PLAYER_SIZE / 2
-	global_position.x = clamp(global_position.x, half_size.x, WINDOW_SIZE.x - half_size.x)
-	global_position.y = clamp(global_position.y, half_size.y, WINDOW_SIZE.y - half_size.y)
+	global_position.x = clamp(global_position.x, PLAYER_SIZE.x, WINDOW_SIZE.x - PLAYER_SIZE.x)
+	global_position.y = clamp(global_position.y, PLAYER_SIZE.y, WINDOW_SIZE.y - PLAYER_SIZE.y)
 	
 	velocity = velocity.normalized()
 	global_position += SPEED * velocity * delta
 	
-	if Input.is_action_pressed("click") and GameManager.node_creation_parent != null and can_shoot:
+	if Input.is_action_pressed("click") and GameManager.node_creation_parent != null and can_shoot and !is_dead:
 		GameManager.instance_node(bullet, global_position, GameManager.node_creation_parent)
 		start_reload()
 
@@ -51,7 +52,11 @@ func _on_timer_reload_timeout() -> void:
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		can_shoot = false
+		is_dead = true
 		visible = false
 		await(get_tree().create_timer(RESPAWN_TIME).timeout)
+		
+		if GameManager.high_score < GameManager.points:
+			GameManager.high_score = GameManager.points
+			
 		get_tree().reload_current_scene()

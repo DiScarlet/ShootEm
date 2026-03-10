@@ -24,6 +24,9 @@ func _process(delta: float) -> void:
 	global_position += velocity * SPEED * delta
 	
 	if hp <= 0:
+		if GameManager.camera != null:
+			GameManager.camera.screen_shake(GameManager.SHAKE_INTENSITY, 0.1)
+			
 		GameManager.points += 10
 		if GameManager.node_creation_parent != null:
 			var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
