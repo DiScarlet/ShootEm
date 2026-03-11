@@ -16,7 +16,6 @@ var high_score = 0
 var player = null
 var camera = null
 
-
 #FUNCS
 #action functions
 func instance_node(node, location, parent):

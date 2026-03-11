@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b4ok3ievmdxys"]
+
+[ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemies/enemy_base.tscn" id="1_cgo6u"]
+
+[node name="EnemyBase" unique_id=81046350 instance=ExtResource("1_cgo6u")]
+modulate = Color(0.12941177, 0.10980392, 0.96862745, 1)
+SPEED = 100
+MAX_HP = 5
+KNOCKBACK = 300

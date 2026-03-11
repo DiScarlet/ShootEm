@@ -22,6 +22,8 @@ func _process(delta: float) -> void:
 	
 	if is_screen_shaking:
 		global_position += Vector2(randi_range(-shake_intensity, shake_intensity), randi_range(-shake_intensity, shake_intensity)) * delta
+	else:
+		global_position = lerp(global_position, Vector2(GameManager.WINDOW_SIZE / 2), 0.3)
 		
 #action functions
 func screen_shake(intensity, time):
@@ -34,4 +36,3 @@ func screen_shake(intensity, time):
 #event functions
 func _on_screen_shake_timer_timeout() -> void:
 	is_screen_shaking = false
-	global_position = GameManager.WINDOW_SIZE / 2

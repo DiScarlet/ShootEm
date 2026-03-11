@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dryair0vs6tgf"]
+
+[ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemies/enemy_base.tscn" id="1_v200n"]
+
+[node name="EnemyYellow" unique_id=81046350 instance=ExtResource("1_v200n")]
+modulate = Color(0.99215686, 0.9647059, 0.039215688, 1)
+SPEED = 50
+MAX_HP = 15
+KNOCKBACK = 1000

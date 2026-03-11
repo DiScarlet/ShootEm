@@ -4,8 +4,9 @@ extends Node2D
 #consts
 const WINDOW_SIZE = GameManager.WINDOW_SIZE
 const ENEMY_SPAWN_OFFSET = 160
+#exports
+@export var enemies: Array [PackedScene]
 #locals
-var enemy_1 = preload("res://scenes/enemy.tscn")
 #Godot elements
 @onready var interval_timer: Timer = $IntervalTimer
 @onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
@@ -44,9 +45,10 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		
 		x = randi_range(-ENEMY_SPAWN_OFFSET, WINDOW_SIZE.x + ENEMY_SPAWN_OFFSET)
 		
-	var enemy_position = Vector2(x ,y)
-		
-	GameManager.instance_node(enemy_1, enemy_position, GameManager.node_creation_parent)
+	var enemy_position = Vector2(x ,y)		
+	var enemy_ind = randi_range(0, enemies.size() - 1)
+	
+	GameManager.instance_node(enemies[enemy_ind], enemy_position, GameManager.node_creation_parent)
 
 func _on_interval_timer_timeout() -> void:
 	if enemy_spawn_timer.wait_time >= GameManager.MAX_DIFFICULTY:
