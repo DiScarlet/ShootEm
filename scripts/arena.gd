@@ -6,6 +6,7 @@ const WINDOW_SIZE = GameManager.WINDOW_SIZE
 const ENEMY_SPAWN_OFFSET = 160
 #exports
 @export var enemies: Array [PackedScene]
+@export var power_ups: Array [PackedScene]
 #locals
 #Godot elements
 @onready var interval_timer: Timer = $IntervalTimer
@@ -54,3 +55,9 @@ func _on_interval_timer_timeout() -> void:
 	if enemy_spawn_timer.wait_time >= GameManager.MAX_DIFFICULTY:
 		var new_time = enemy_spawn_timer.wait_time * 0.95
 		enemy_spawn_timer.wait_time = round(new_time * 1000.0) / 1000.0
+
+
+func _on_powerup_spawn_timer_timeout() -> void:
+	var powerup_ind = randi_range(0, power_ups.size() - 1)
+
+	GameManager.instance_node(power_ups[powerup_ind], Vector2(randi_range(0, WINDOW_SIZE.x), randi_range(0, WINDOW_SIZE.y)), self)

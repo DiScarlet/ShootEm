@@ -9,12 +9,15 @@ const PLAYER_SIZE = Vector2i(24, 24)
 #locals
 	#player
 var velocity = Vector2()
+var reload_speed = GameManager.DEFAULT_RELOAD_SPEED
 	#bullet
 var bullet = preload("res://scenes/bullet.tscn")
 var can_shoot = true
 var is_dead = false
+	#powerup
+var powerup_array = []
 #Godot elements
-@onready var timer_reload: Timer = $Timer_Reload
+@onready var timer_reload: Timer = $TimerReload
 
 
 #FUNCS
@@ -49,6 +52,7 @@ func start_reload():
 #event functions
 func _on_timer_reload_timeout() -> void:
 	can_shoot = true
+	timer_reload.wait_time = reload_speed
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
@@ -60,3 +64,8 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 			GameManager.high_score = GameManager.points
 			
 		get_tree().reload_current_scene()
+
+func _on_timer_power_up_timeout() -> void:
+	if powerup_array.find("PowerUpReload") != null:
+		reload_speed = GameManager.DEFAULT_RELOAD_SPEED
+		powerup_array.erase("PowerUpReload")

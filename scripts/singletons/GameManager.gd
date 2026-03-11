@@ -2,7 +2,13 @@ extends Node
 
 #VARS
 #consts
+	#system
 const WINDOW_SIZE = Vector2i(1280, 720)
+	#powerups
+const DEFAULT_RELOAD_SPEED = 0.15
+	#enemies
+const BLOOD_SATURATION = 0.9
+const BLOOD_VALUE = 0.25
 	#other func's constants
 const SHAKE_INTENSITY = 3
 const DIFFICULTY_INTERVAL = 3.0

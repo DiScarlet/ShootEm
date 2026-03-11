@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c7fd16v1dsogf"]
+
+[ext_resource type="Texture2D" uid="uid://jtgxew27578n" path="res://assets/sprites/Square.png" id="1_38mqn"]
+[ext_resource type="Script" uid="uid://m0qq7cb364u" path="res://scripts/powerups/power_up_reload.gd" id="2_par65"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_par65"]
+size = Vector2(15.556351, 15.556351)
+
+[node name="PowerUpReload" type="Sprite2D" unique_id=548531903]
+modulate = Color(1.0449623, 0.58525735, 0.63681304, 1)
+rotation = 0.7853982
+texture = ExtResource("1_38mqn")
+script = ExtResource("2_par65")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=234481470]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1505741440]
+shape = SubResource("RectangleShape2D_par65")
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

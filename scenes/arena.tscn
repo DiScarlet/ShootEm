@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://q0l3nqxud6n2" path="res://scripts/UI/score.gd" id="4_xdvfk"]
 [ext_resource type="Script" uid="uid://bqbhw16j16xcc" path="res://scripts/UI/high_score.gd" id="5_4ag8t"]
 [ext_resource type="Script" uid="uid://b0xdbtaudahbx" path="res://scripts/camera_2d.gd" id="5_7ft05"]
+[ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up_reload.tscn" id="5_41jku"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
@@ -19,6 +20,7 @@ glow_blend_mode = 0
 [node name="Arena" type="Node2D" unique_id=86317714]
 script = ExtResource("1_wl4x5")
 enemies = Array[PackedScene]([ExtResource("2_naajo"), ExtResource("3_41jku"), ExtResource("4_k1k1x")])
+power_ups = Array[PackedScene]([ExtResource("5_41jku")])
 
 [node name="Player" parent="." unique_id=1334363141 instance=ExtResource("2_olpmc")]
 position = Vector2(640, 360)
@@ -31,6 +33,13 @@ environment = SubResource("Environment_wl4x5")
 
 [node name="EnemySpawnTimer" type="Timer" parent="." unique_id=220998081]
 wait_time = 3.0
+autostart = true
+
+[node name="IntervalTimer" type="Timer" parent="." unique_id=1689908458]
+autostart = true
+
+[node name="PowerupSpawnTimer" type="Timer" parent="." unique_id=773368948]
+wait_time = 5.0
 autostart = true
 
 [node name="UI" type="Node2D" parent="." unique_id=1367308604]
@@ -94,9 +103,7 @@ script = ExtResource("5_7ft05")
 
 [node name="ScreenShakeTimer" type="Timer" parent="Camera2D" unique_id=800695450]
 
-[node name="IntervalTimer" type="Timer" parent="." unique_id=1689908458]
-autostart = true
-
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
-[connection signal="timeout" from="Camera2D/ScreenShakeTimer" to="Camera2D" method="_on_screen_shake_timer_timeout"]
 [connection signal="timeout" from="IntervalTimer" to="." method="_on_interval_timer_timeout"]
+[connection signal="timeout" from="PowerupSpawnTimer" to="." method="_on_powerup_spawn_timer_timeout"]
+[connection signal="timeout" from="Camera2D/ScreenShakeTimer" to="Camera2D" method="_on_screen_shake_timer_timeout"]

@@ -25,6 +25,7 @@ func _process(_delta: float) -> void:
 		if GameManager.node_creation_parent != null:
 			var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
 			blood_part_instance.rotation = velocity.angle()
+			blood_part_instance.modulate = Color.from_hsv(current_color.h, GameManager.BLOOD_SATURATION, GameManager.BLOOD_VALUE)
 		queue_free()
 		
 #action items
