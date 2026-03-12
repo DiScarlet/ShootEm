@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://b82kjfjjqgiey"]
 
 [ext_resource type="Script" uid="uid://b4b6aaleanmjd" path="res://scripts/arena.gd" id="1_wl4x5"]
-[ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/Enemies/enemy_base.tscn" id="2_naajo"]
 [ext_resource type="PackedScene" uid="uid://c3yb2eql5pwpp" path="res://scenes/player.tscn" id="2_olpmc"]
-[ext_resource type="PackedScene" uid="uid://b4ok3ievmdxys" path="res://scenes/Enemies/enemy_blue.tscn" id="3_41jku"]
+[ext_resource type="PackedScene" uid="uid://b4ok3ievmdxys" path="res://scenes/enemies/enemy_blue.tscn" id="3_41jku"]
 [ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemies/enemy_base.tscn" id="3_olpmc"]
-[ext_resource type="PackedScene" uid="uid://dryair0vs6tgf" path="res://scenes/Enemies/enemy_yellow.tscn" id="4_k1k1x"]
+[ext_resource type="PackedScene" uid="uid://dryair0vs6tgf" path="res://scenes/enemies/enemy_yellow.tscn" id="4_k1k1x"]
 [ext_resource type="Script" uid="uid://q0l3nqxud6n2" path="res://scripts/UI/score.gd" id="4_xdvfk"]
 [ext_resource type="Script" uid="uid://bqbhw16j16xcc" path="res://scripts/UI/high_score.gd" id="5_4ag8t"]
 [ext_resource type="Script" uid="uid://b0xdbtaudahbx" path="res://scripts/camera_2d.gd" id="5_7ft05"]
-[ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up_reload.tscn" id="5_41jku"]
+[ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up.tscn" id="5_41jku"]
+[ext_resource type="PackedScene" uid="uid://cggixvs17i0el" path="res://scenes/powerups/power_up_damage.tscn" id="6_41jku"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
@@ -19,8 +19,8 @@ glow_blend_mode = 0
 
 [node name="Arena" type="Node2D" unique_id=86317714]
 script = ExtResource("1_wl4x5")
-enemies = Array[PackedScene]([ExtResource("2_naajo"), ExtResource("3_41jku"), ExtResource("4_k1k1x")])
-power_ups = Array[PackedScene]([ExtResource("5_41jku")])
+enemies = Array[PackedScene]([ExtResource("3_olpmc"), ExtResource("3_41jku"), ExtResource("4_k1k1x")])
+power_ups = Array[PackedScene]([ExtResource("5_41jku"), ExtResource("6_41jku")])
 
 [node name="Player" parent="." unique_id=1334363141 instance=ExtResource("2_olpmc")]
 position = Vector2(640, 360)
@@ -39,7 +39,7 @@ autostart = true
 autostart = true
 
 [node name="PowerupSpawnTimer" type="Timer" parent="." unique_id=773368948]
-wait_time = 5.0
+wait_time = 15.0
 autostart = true
 
 [node name="UI" type="Node2D" parent="." unique_id=1367308604]

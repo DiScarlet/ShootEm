@@ -17,7 +17,7 @@ const MAX_DIFFICULTY = 0.2
 var node_creation_parent = null
 var points = 0
 	#UI
-var high_score = 0
+var high_score: int = 0
 	#characters/npcs
 var player = null
 var camera = null
@@ -29,3 +29,31 @@ func instance_node(node, location, parent):
 	parent.add_child(node_instance)
 	node_instance.global_position = location
 	return node_instance
+	
+func init_save_dict():
+	var save_dict = {
+		"highscore" : high_score
+	}
+	return save_dict
+	
+func save_game():
+	var file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	file.store_line(JSON.stringify(init_save_dict()))
+	file.close()
+	
+func load_game():
+	var file_path = "user://savegame.save"
+	
+	if not FileAccess.file_exists(file_path):
+		print("Ooopsie~! Save file not found.")
+		return
+		
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	if not file:
+		print("Ooopsie~! Can't open a save file.")
+		
+	var json_string = file.get_as_text()
+	var current_line = JSON.parse_string(json_string)
+	
+	high_score = current_line["highscore"]
+	file.close()

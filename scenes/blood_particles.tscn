@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://dp8ol81fdsgtu"]
 
 [ext_resource type="Texture2D" uid="uid://dm1x1kdlvq6dn" path="res://assets/sprites/Circle.png" id="1_4enpv"]
-[ext_resource type="Script" uid="uid://c0i3w246rp8n4" path="res://scripts/blood_particles.gd" id="2_n323q"]
+[ext_resource type="Script" uid="uid://d3gwq3ekhx125" path="res://scripts/blood/blood_main.gd" id="1_n323q"]
+[ext_resource type="Script" uid="uid://c0i3w246rp8n4" path="res://scripts/blood/blood_particles.gd" id="2_n323q"]
 
-[node name="BloodParticles" type="CPUParticles2D" unique_id=2015632048]
+[node name="Blood" type="Node2D" unique_id=2095504121]
+script = ExtResource("1_n323q")
+
+[node name="Particles" type="CPUParticles2D" parent="." unique_id=2015632048]
 z_index = -5
 amount = 15
 texture = ExtResource("1_4enpv")
@@ -18,9 +22,15 @@ scale_amount_max = 0.1
 color = Color(3.0973105, 3.0973105, 3.0973105, 0.8392157)
 script = ExtResource("2_n323q")
 
-[node name="FreezeTimer" type="Timer" parent="." unique_id=1604759130]
+[node name="FreezeTimer" type="Timer" parent="Particles" unique_id=1604759130]
 wait_time = 0.15
 one_shot = true
 autostart = true
 
-[connection signal="timeout" from="FreezeTimer" to="." method="_on_freeze_timer_timeout"]
+[node name="FadeOutTimer" type="Timer" parent="." unique_id=516761892]
+wait_time = 40.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Particles/FreezeTimer" to="Particles" method="_on_freeze_timer_timeout"]
+[connection signal="timeout" from="FadeOutTimer" to="." method="_on_fade_out_timer_timeout"]

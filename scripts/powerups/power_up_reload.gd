@@ -1,15 +1,21 @@
 extends Sprite2D
 
+
+#VARS
+#exports
+@export var player_var_modify: String
+@export var player_var_set: float
+@export var powerup_cooldown_time: float = 2
+
 #FUNCS
 #event functions
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
 		var player = area.get_parent()
-		print(str(player))
-		var timer = player.get_node("$TimerPowerUp")
-		print(str(timer))
-		player.reload_speed = 0.07
-		timer.get_node("$TimerPowerUp").wait_time = 1
+		var timer = player.get_node("TimerPowerUp")
+
+		player.set(player_var_modify, player_var_set)
+		timer.wait_time = powerup_cooldown_time
 		timer.start()
-		player.powerup_array.append("PowerUpReload")
+		player.powerup_array.append(name)
 		queue_free()

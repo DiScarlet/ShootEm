@@ -16,6 +16,8 @@ var can_shoot = true
 var is_dead = false
 	#powerup
 var powerup_array = []
+var damage = 1
+var default_damage = damage
 #Godot elements
 @onready var timer_reload: Timer = $TimerReload
 
@@ -40,7 +42,8 @@ func _process(delta: float) -> void:
 	global_position += SPEED * velocity * delta
 	
 	if Input.is_action_pressed("click") and GameManager.node_creation_parent != null and can_shoot and !is_dead:
-		GameManager.instance_node(bullet, global_position, GameManager.node_creation_parent)
+		var bullet_instance = GameManager.instance_node(bullet, global_position, GameManager.node_creation_parent)
+		bullet_instance.damage = damage
 		start_reload()
 
 #action functions
@@ -58,10 +61,10 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
 		is_dead = true
 		visible = false
-		await(get_tree().create_timer(RESPAWN_TIME).timeout)
 		
-		if GameManager.high_score < GameManager.points:
-			GameManager.high_score = GameManager.points
+		save_highscore()
+		GameManager.save_game()
+		await(get_tree().create_timer(RESPAWN_TIME).timeout)
 			
 		get_tree().reload_current_scene()
 
@@ -69,3 +72,11 @@ func _on_timer_power_up_timeout() -> void:
 	if powerup_array.find("PowerUpReload") != null:
 		reload_speed = GameManager.DEFAULT_RELOAD_SPEED
 		powerup_array.erase("PowerUpReload")
+	elif powerup_array.find("PowerUpDamage") != null:
+		damage = default_damage
+		powerup_array.erase("PowerUpDamage")
+		
+#helper functions
+func save_highscore():
+	if GameManager.high_score < GameManager.points:
+			GameManager.high_score = GameManager.points

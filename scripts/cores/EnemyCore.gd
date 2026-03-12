@@ -39,18 +39,19 @@ func basic_movement_towards_player(delta: float) -> void:
 	
 #event functions
 	#custom 
-func on_damaged(stun_timer: Timer):
+func on_damaged(stun_timer: Timer, damage):
 		modulate = Color(1, 1, 1)
 		velocity = -velocity * KNOCKBACK
-		hp -= 1
+		hp -= damage
 		stun = true
 		stun_timer.start()
 
 	#system
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("EnemyDamager") and !stun:
-		on_damaged(stun_timer)
-		area.get_parent().queue_free()
+		var enemy = area.get_parent()
+		on_damaged(stun_timer, enemy.damage)
+		enemy.queue_free()
 		
 func _on_stun_timer_timeout() -> void:
 	modulate = Color(current_color)

@@ -6,6 +6,7 @@ const VELOCITY = Vector2(1, 0)
 const SPEED = 250
 #locals
 var look_once = true
+var damage
 
 
 #FUNCS
