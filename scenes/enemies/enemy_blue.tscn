@@ -7,3 +7,4 @@ modulate = Color(0.12941177, 0.10980392, 0.96862745, 1)
 SPEED = 100
 MAX_HP = 5
 KNOCKBACK = 300
+color_name = "blue"

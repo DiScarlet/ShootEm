@@ -17,6 +17,7 @@ const ENEMY_SPAWN_OFFSET = 160
 #system overrides
 func _ready() -> void:
 	GameManager.node_creation_parent = self
+	GameManager.start_quest.emit()
 	GameManager.points = 0
 	interval_timer.wait_time = GameManager.DIFFICULTY_INTERVAL
 

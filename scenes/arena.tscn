@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://b0xdbtaudahbx" path="res://scripts/camera_2d.gd" id="5_7ft05"]
 [ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up.tscn" id="5_41jku"]
 [ext_resource type="PackedScene" uid="uid://cggixvs17i0el" path="res://scenes/powerups/power_up_damage.tscn" id="6_41jku"]
+[ext_resource type="Script" uid="uid://bi7yxc83hanjg" path="res://scripts/quests/quest_label.gd" id="10_k1k1x"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
@@ -45,27 +46,27 @@ autostart = true
 [node name="UI" type="Node2D" parent="." unique_id=1367308604]
 z_index = 20
 
-[node name="Control" type="Control" parent="UI" unique_id=1679407863]
+[node name="ScoreControl" type="Control" parent="UI" unique_id=1679407863]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 
-[node name="Score" type="Label" parent="UI/Control" unique_id=2071432060]
+[node name="Score" type="Label" parent="UI/ScoreControl" unique_id=2071432060]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -43.0
-offset_top = 26.0
-offset_right = 43.0
-offset_bottom = 95.0
-grow_horizontal = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -98.0
+offset_top = 13.0
+offset_right = -12.0
+offset_bottom = 82.0
+grow_horizontal = 0
 theme_override_font_sizes/font_size = 50
 text = "100"
 script = ExtResource("4_xdvfk")
 
-[node name="HighScoreVal" type="Label" parent="UI/Control" unique_id=2140397873]
+[node name="HighScoreVal" type="Label" parent="UI/ScoreControl" unique_id=2140397873]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -81,7 +82,7 @@ theme_override_font_sizes/font_size = 30
 text = "100"
 script = ExtResource("5_4ag8t")
 
-[node name="HighScoreText" type="Label" parent="UI/Control" unique_id=1479550535]
+[node name="HighScoreText" type="Label" parent="UI/ScoreControl" unique_id=1479550535]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -96,6 +97,32 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 30
 text = "High score:"
+
+[node name="QuestControl" type="Control" parent="UI" unique_id=336999419]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_right = 1280.0
+offset_bottom = 125.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="UI/QuestControl" unique_id=317403508]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 65
+text = "Quest text here"
+script = ExtResource("10_k1k1x")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=885219624]
 position = Vector2(640, 360)

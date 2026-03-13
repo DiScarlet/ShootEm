@@ -5,6 +5,8 @@ extends Sprite2D
 @export var SPEED = 80
 @export var MAX_HP = 3
 @export var KNOCKBACK = 600
+@export var POINT_VALUE = 10
+@export var color_name = "red"
 #locals
 var velocity = Vector2()
 var stun = false
@@ -22,6 +24,7 @@ func _process(_delta: float) -> void:
 			GameManager.camera.screen_shake(GameManager.SHAKE_INTENSITY, 0.1)
 			
 		GameManager.points += 10
+		QuestManager.enemy_killed.emit(color_name)
 		if GameManager.node_creation_parent != null:
 			var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
 			blood_part_instance.rotation = velocity.angle()
