@@ -2,6 +2,7 @@ extends Node
 
 #SIGNALS
 signal start_quest
+signal reset_level
 
 #VARS
 #consts

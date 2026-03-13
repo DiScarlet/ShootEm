@@ -14,12 +14,12 @@ var current_template = "kill_enemy"
 	#to do for a quest
 var enemies_to_kill = 2
 var powerups_to_collect = 1
-var target_color = "red"
+var target_color = "green"
 var time_limit = 25
 	#done for a quest
 var enemies_killed = 0
 #lists/dicts
-var enemy_colors = ["red", "blue", "yellow"]
+var enemy_colors = ["green", "blue", "yellow"]
 var screen_sides = ["right", "left"]
 var quest_templates = {
 	"kill_enemy": {
@@ -98,10 +98,11 @@ var quest_templates = {
 func _ready() -> void:
 	GameManager.start_quest.connect(generate_random_quest)
 	enemy_killed.connect(on_enemy_killed)
+	GameManager.reset_level.connect(reset_difficulty)
 	
 #action functions
 func generate_random_quest():
-	print("generate_random_quest")
+	enemies_killed = 0
 	#HRDCODED FOR TESTING replace with current_template = quest_templates.keys().pick_random()
 	current_template = "kill_enemy"
 	GameManager.quest_type = current_template
@@ -112,7 +113,14 @@ func generate_random_quest():
 	
 func complete_quest():
 	print("quest completed!")
+	generate_random_quest()
 	
+func reset_difficulty():
+	var enemies_to_kill = 2
+	var powerups_to_collect = 1
+	var target_color = "green"
+	var time_limit = 25
+	var enemies_killed = 0
 	
 #helper functions
 func populate_quest_vars():
@@ -123,12 +131,10 @@ func populate_quest_vars():
 			enemies_to_kill += 1
 
 func update_quest_text():
-	print("update_quest_text")
 	var quest_text = quest_templates[current_template]["text"]
 	
 	quest_text = quest_text.replace("{count}", str(enemies_to_kill))
 	quest_text = quest_text.replace("{color}", target_color)
-	print(quest_text)
 	
 	update_quest_label.emit(quest_text)
 	

@@ -12,6 +12,7 @@ position = Vector2(640, 360)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_8e3ao")
 script = ExtResource("2_38ino")
+color_name = "green"
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=14445288 groups=["Enemy"]]
 
