@@ -62,4 +62,8 @@ shape = SubResource("RectangleShape2D_par65")
 libraries/ = SubResource("AnimationLibrary_sei4p")
 autoplay = &"appear"
 
+[node name="LifespanTimer" type="Timer" parent="." unique_id=671499897]
+wait_time = 5.0
+one_shot = true
+
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

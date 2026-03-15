@@ -20,4 +20,5 @@ func _process(delta: float) -> void:
 
 #event functions
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	QuestManager.bullet_missed.emit()
 	queue_free()
