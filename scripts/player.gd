@@ -26,6 +26,7 @@ var default_damage = damage
 #system overrides
 func _ready() -> void:
 	GameManager.player = self
+	GameManager.player_ready.emit()
 	
 func _exit_tree() -> void:
 	GameManager.player = null
@@ -51,6 +52,16 @@ func start_reload():
 	timer_reload.start()
 	can_shoot = false
 	
+func die():
+	is_dead = true
+	visible = false
+		
+	save_highscore()
+	GameManager.save_game()
+	GameManager.reset_level.emit()
+	await(get_tree().create_timer(RESPAWN_TIME).timeout)
+			
+	get_tree().reload_current_scene()
 	
 #event functions
 func _on_timer_reload_timeout() -> void:
@@ -59,14 +70,7 @@ func _on_timer_reload_timeout() -> void:
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		is_dead = true
-		visible = false
-		
-		save_highscore()
-		GameManager.save_game()
-		await(get_tree().create_timer(RESPAWN_TIME).timeout)
-			
-		get_tree().reload_current_scene()
+		die()
 
 func _on_timer_power_up_timeout() -> void:
 	if powerup_array.find("PowerUpReload") != null:
@@ -80,3 +84,10 @@ func _on_timer_power_up_timeout() -> void:
 func save_highscore():
 	if GameManager.high_score < GameManager.points:
 			GameManager.high_score = GameManager.points
+			
+#quest functions
+func get_current_side():
+	if position.x < GameManager.WINDOW_SIZE.x / 2:
+		return "left"
+	else:
+		return "right"

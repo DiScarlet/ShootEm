@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up.tscn" id="5_41jku"]
 [ext_resource type="PackedScene" uid="uid://cggixvs17i0el" path="res://scenes/powerups/power_up_damage.tscn" id="6_41jku"]
 [ext_resource type="Script" uid="uid://bi7yxc83hanjg" path="res://scripts/quests/quest_label.gd" id="10_k1k1x"]
+[ext_resource type="Script" uid="uid://djst5gdekcofa" path="res://scripts/quests/Additional_UI/grace_start_timer.gd" id="11_ajq0i"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
@@ -114,15 +115,48 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -615.0
+offset_top = -45.0
+offset_right = 629.0
+offset_bottom = 45.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 65
 text = "Quest text here"
 script = ExtResource("10_k1k1x")
+
+[node name="StartsInLabel" type="Label" parent="UI/QuestControl" unique_id=1587331598]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -151.0
+offset_top = -17.0
+offset_right = -33.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Quest starts in:"
+
+[node name="StartTimeLabel" type="Label" parent="UI/QuestControl" unique_id=631586695]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = -19.0
+offset_right = 66.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+
+[node name="GraceStartTimer" type="Timer" parent="UI/QuestControl" unique_id=253949746]
+script = ExtResource("11_ajq0i")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=885219624]
 position = Vector2(640, 360)

@@ -3,6 +3,7 @@ extends Node
 #SIGNALS
 signal start_quest
 signal reset_level
+signal player_ready
 
 #VARS
 #consts
