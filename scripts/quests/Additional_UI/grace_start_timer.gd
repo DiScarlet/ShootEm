@@ -28,12 +28,10 @@ func start_countdown():
 	
 #event functions
 func _on_timeout():
-	print("In _on_timeout, time_left_counter: " + str(time_left_counter))
 	time_left_counter -= 1
 	start_time_label.text = str(time_left_counter)
 
 	if time_left_counter <= 0:
-		print("In time_left_counter <= 0")
 		stop()
 		start_time_label.text = "0"
 		QuestManager.grace_timer_finished.emit()

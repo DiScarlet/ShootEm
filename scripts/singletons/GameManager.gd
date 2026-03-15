@@ -44,7 +44,6 @@ func init_save_dict():
 	return save_dict
 	
 func save_game():
-	print(get_save_key())
 	var file = FileAccess.open_encrypted_with_pass("user://savegame.save", FileAccess.WRITE, get_save_key())
 	file.store_line(JSON.stringify(init_save_dict()))
 	file.close()

@@ -16,6 +16,7 @@ var player
 var quest_templates = QuestTemplates.quest_templates
 var current_template = "kill_enemy"
 var is_process_active = false
+var time_left_in_quest = 0
 	#to do for a quest
 var enemies_to_kill = 2
 var powerups_to_collect = 1
@@ -36,11 +37,11 @@ func _ready() -> void:
 	enemy_killed.connect(on_enemy_killed)
 	GameManager.reset_level.connect(reset_difficulty)
 	
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if is_process_active:
 		
 		if current_template == "location_play":
-			check_side()
+			check_side(delta)
 	
 #action functions
 func generate_random_quest():
@@ -77,6 +78,7 @@ func reset_difficulty():
 	powerups_to_collect = 1
 	target_color = "green"
 	time_limit = 25
+	quest_duration = 0
 	enemies_killed = 0
 	
 #helper functions
@@ -90,6 +92,7 @@ func populate_quest_vars():
 	if current_template == "location_play":
 		side_to_stay = screen_sides.pick_random()
 		quest_duration += 5
+		time_left_in_quest = quest_duration
 		
 func update_quest_text():
 	var quest_text = quest_templates[current_template]["text"]
@@ -106,16 +109,20 @@ func update_quest_text():
 	
 #quest-specific start functions
 func start_location_quest():
-	print("Starting grace timer")
 	start_grace_timer.emit()
 	await grace_timer_finished
 	is_process_active = true
 	set_process(true)
 	
 #quest-specific helper functions
-func check_side():
+func check_side(delta):
 	if player.get_current_side() != side_to_stay:
 		fail_quest()
+	else:
+		time_left_in_quest -= delta
+		
+	if time_left_in_quest <= 0:
+		complete_quest()
 		
 #player events functions
 func on_enemy_killed(color):
