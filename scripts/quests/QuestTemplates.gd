@@ -6,11 +6,6 @@ var quest_templates = {
 		"text": "Kill {count} {color} enemies"
 	},
 
-	"avoid_kill": {
-		"type": "future",
-		"text": "Avoid killing {color} enemies while completing the next task"
-	},
-
 	"location_play": {
 		"type": "location",
 		"text": "Play only on the {side} part of the screen for {time} seconds" 

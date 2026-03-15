@@ -13,7 +13,7 @@ signal grace_timer_finished
 #consts
 	#limits for a to do
 const MAX_ENEMIES_TO_KILL = 10
-const MIN_TIME = 5
+const MIN_TIME = 35
 #locals
 var player
 var quest_templates = QuestTemplates.quest_templates
@@ -25,7 +25,7 @@ var quest_state
 var enemies_to_kill = 2
 var powerups_to_collect = 1
 var target_color = "green"
-var time_limit = 25
+var time_limit = 55
 var quest_duration = 0
 var side_to_stay = "right"
 	#done for a quest
@@ -73,7 +73,7 @@ func generate_random_quest():
 		player = GameManager.player
 		
 	#HRDCODED FOR TESTING replace with current_template = quest_templates.keys().pick_random()
-	current_template = "combo_kill"
+	current_template = "multi_kill"
 	GameManager.quest_type = current_template
 	var template = quest_templates[current_template]
 	
@@ -89,17 +89,19 @@ func generate_random_quest():
 		start_no_only_kill()	
 	elif current_template == "combo_kill":
 		start_base()
+	elif current_template == "multi_kill":
+		start_multi_kill()
 	
 func complete_quest():
 	quest_state = QuestState.FINISHED
 	print("quest completed!")
-	if quest_timer.timeout.is_connected(complete_quest):
-		quest_timer.timeout.disconnect(complete_quest)
-		
+	stop_timer_and_disconnect()
+	
 	generate_random_quest()
 	
 func fail_quest():
 	quest_state = QuestState.FINISHED
+	stop_timer_and_disconnect()
 	print("quest failed, you bastard! - in James May's voice")
 	player.die()
 	
@@ -111,7 +113,7 @@ func reset_difficulty():
 	enemies_to_kill = 2
 	powerups_to_collect = 1
 	target_color = "green"
-	time_limit = 25
+	time_limit = 55
 	quest_duration = 0
 	enemies_killed = 0
 	
@@ -120,8 +122,7 @@ func populate_quest_vars():
 	if current_template == "kill_enemy":
 		target_color = enemy_colors.pick_random()
 		enemies_killed = 0
-		if enemies_to_kill <= MAX_ENEMIES_TO_KILL:
-			enemies_to_kill += 1
+		increment_enemies_to_kill()
 		
 		quest_state = QuestState.ACTIVE
 	
@@ -142,8 +143,14 @@ func populate_quest_vars():
 	elif current_template == "powerup_skip":
 		quest_state = QuestState.ACTIVE
 	elif current_template == "combo_kill":
-		if enemies_to_kill <= MAX_ENEMIES_TO_KILL:
-			enemies_to_kill += 1
+		increment_enemies_to_kill()
+	elif current_template == "multi_kill":
+		increment_enemies_to_kill()
+		time_limit -= 5
+		
+func increment_enemies_to_kill():
+	if enemies_to_kill <= MAX_ENEMIES_TO_KILL:
+		enemies_to_kill += 1
 		
 func update_quest_text():
 	var quest_text = quest_templates[current_template]["text"]
@@ -163,6 +170,9 @@ func update_quest_text():
 		quest_text = quest_text.replace("{count}", str(powerups_to_collect))
 	elif current_template == "combo_kill":
 		quest_text = quest_text.replace("{count}", str(enemies_to_kill))
+	elif current_template == "multi_kill":
+		quest_text = quest_text.replace("{count}", str(enemies_to_kill))
+		quest_text = quest_text.replace("{time}", str(time_limit))
 		
 	update_quest_label.emit(quest_text)
 	
@@ -185,6 +195,11 @@ func start_no_only_kill():
 		quest_timer.timeout.connect(complete_quest)
 	quest_timer.start()
 	
+func start_multi_kill():
+	start_base()
+	quest_timer.wait_time = time_limit
+	if !quest_timer.timeout.is_connected(fail_quest):
+		quest_timer.timeout.connect(fail_quest)
 #quest-specific helper functions
 func check_side(delta):
 	if player.get_current_side() != side_to_stay:
@@ -214,7 +229,7 @@ func on_enemy_killed(color):
 		if color != target_color:
 			fail_quest()
 			
-	elif current_template == "combo_kill":
+	elif current_template == "combo_kill" or current_template == "multi_kill":
 			enemies_killed += 1
 			
 			if enemies_killed >= enemies_to_kill:
@@ -248,3 +263,14 @@ func on_bullet_missed():
 		
 	if current_template == "combo_kill":
 		fail_quest()
+		
+#system helper functions
+func stop_timer_and_disconnect():
+	if !quest_timer.is_stopped():
+		quest_timer.stop()
+		
+	if quest_timer.timeout.is_connected(complete_quest):
+		quest_timer.timeout.disconnect(complete_quest)
+		
+	if quest_timer.timeout.is_connected(fail_quest):
+		quest_timer.timeout.disconnect(fail_quest)
