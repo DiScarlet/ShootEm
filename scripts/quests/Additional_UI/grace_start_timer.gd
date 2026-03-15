@@ -18,7 +18,7 @@ func _ready() -> void:
 func start_countdown():
 	if not is_stopped():
 		return
-		
+	print("Grace timer has STARTED")
 	time_left_counter = GRACE_TIME
 	wait_time = 1.0
 	one_shot = false 
@@ -34,4 +34,5 @@ func _on_timeout():
 	if time_left_counter <= 0:
 		stop()
 		start_time_label.text = "0"
+		print("Grace timer has finished")
 		QuestManager.grace_timer_finished.emit()
