@@ -20,9 +20,10 @@ const MIN_TIME = 35
 var player
 var quest_templates = QuestTemplates.quest_templates
 var current_template = "kill_enemy"
-var is_process_active = false
 var time_left_in_quest = 0
 var quest_state
+var center_rect: Rect2
+var border_margin := 100
 	#to do for a quest
 var enemies_to_kill = 2
 var powerups_to_collect = 1
@@ -53,6 +54,9 @@ func _ready() -> void:
 	add_child(quest_timer)
 	quest_timer.one_shot = true
 	
+	#execute preparation functions
+	initialize_center_rect()
+	
 	#connect to signals
 	GameManager.start_quest.connect(generate_random_quest)
 	GameManager.reset_level.connect(reset_difficulty)
@@ -65,10 +69,20 @@ func _ready() -> void:
 	cursor_moved.connect(on_cursor_moved)
 	
 func _process(delta: float) -> void:
-	if is_process_active and quest_state == QuestState.ACTIVE:
+	if quest_state == QuestState.ACTIVE:
 		if current_template == "location_play":
 			check_side(delta)
-	
+			
+		elif current_template == "center_only":
+			var is_in_center = get_in_center_zone()
+			if !is_in_center:
+				fail_quest()
+				
+		elif current_template == "border_only":
+			var is_in_center = get_in_center_zone()
+			if is_in_center:
+				fail_quest()
+			
 #action functions
 func generate_random_quest():
 	quest_state = QuestState.PREPARING
@@ -79,7 +93,7 @@ func generate_random_quest():
 		player = GameManager.player
 		
 	#HRDCODED FOR TESTING replace with current_template = quest_templates.keys().pick_random()
-	current_template = "cursor_hold"
+	current_template = "border_only"
 	GameManager.quest_type = current_template
 	var template = quest_templates[current_template]
 	
@@ -101,21 +115,22 @@ func generate_random_quest():
 		start_base()
 	elif current_template == "cursor_hold":
 		start_base_timer(time_cursor_to_be_stationary)
+	elif current_template == "center_only" or current_template == "border_only":
+		start_center_border_only()
 	
 func complete_quest():
 	quest_state = QuestState.FINISHED
 	print("quest completed!")
-	stop_timer_and_disconnect()
+	timer_process_stop_disconnect()
 	
 	generate_random_quest()
 	
 func fail_quest():
 	quest_state = QuestState.FINISHED
-	stop_timer_and_disconnect()
+	timer_process_stop_disconnect()
 	print("quest failed, you bastard! - in James May's voice")
 	player.die()
 	
-	is_process_active = false
 	set_process(false)
 	
 func reset_difficulty():
@@ -142,7 +157,7 @@ func populate_quest_vars():
 		quest_duration += 5
 		time_left_in_quest = quest_duration
 		
-	elif current_template == "timed_no_kill" or current_template == "accuracy":
+	elif current_template == "timed_no_kill" or current_template == "accuracy" or current_template == "center_only" or current_template == "border_only":
 		quest_duration += 5
 	elif current_template == "timed_only_kill":
 		target_color = enemy_colors.pick_random()
@@ -173,7 +188,7 @@ func update_quest_text():
 	elif current_template == "location_play":
 		quest_text = quest_text.replace("{side}", side_to_stay)
 		quest_text = quest_text.replace("{time}", str(quest_duration))
-	elif current_template == "timed_no_kill" or current_template == "accuracy":
+	elif current_template == "timed_no_kill" or current_template == "accuracy" or current_template == "center_only" or current_template == "border_only":
 		quest_text = quest_text.replace("{time}", str(quest_duration))
 	elif current_template == "timed_only_kill":
 		quest_text = quest_text.replace("{color}", target_color)
@@ -207,7 +222,6 @@ func start_base_timer(time):
 	
 func start_location_quest():
 	start_base()
-	is_process_active = true
 	set_process(true)
 	
 func start_multi_kill():
@@ -216,6 +230,11 @@ func start_multi_kill():
 	if !quest_timer.timeout.is_connected(fail_quest):
 		quest_timer.timeout.connect(fail_quest)
 		
+func start_center_border_only():
+	print("In start_center_border_only")
+	start_base_timer(quest_duration)
+	set_process(true)
+	
 #quest-specific helper functions
 func check_side(delta):
 	if player.get_current_side() != side_to_stay:
@@ -225,6 +244,23 @@ func check_side(delta):
 		
 	if time_left_in_quest <= 0:
 		complete_quest()
+		
+func initialize_center_rect():
+	var win_size = GameManager.WINDOW_SIZE
+	var center_size: Vector2i = win_size * 0.4
+	var center_pos = (win_size - center_size) / 2
+	center_rect = Rect2(center_pos, center_size)
+	
+func get_in_center_zone():
+	
+	var player_pos = player.global_position
+	
+	if center_rect.has_point(player_pos):
+		print("in center")
+		return true
+	else:
+		print("NOT in center")
+		return false
 		
 #player events functions
 func on_enemy_killed(color):
@@ -295,7 +331,9 @@ func on_cursor_moved():
 		fail_quest()
 		
 #system helper functions
-func stop_timer_and_disconnect():
+func timer_process_stop_disconnect():
+	set_process(false)
+	
 	if !quest_timer.is_stopped():
 		quest_timer.stop()
 		
