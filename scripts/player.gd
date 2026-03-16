@@ -8,8 +8,9 @@ const WINDOW_SIZE = GameManager.WINDOW_SIZE
 const PLAYER_SIZE = Vector2i(24, 24)
 #locals
 	#player
-var velocity = Vector2()
+var velocity = Vector2(0, 0)
 var reload_speed = GameManager.DEFAULT_RELOAD_SPEED
+var last_position = Vector2()
 	#bullet
 var bullet = preload("res://scenes/bullet.tscn")
 var can_shoot = true
@@ -38,9 +39,14 @@ func _process(delta: float) -> void:
 	var half_size = PLAYER_SIZE / 2
 	global_position.x = clamp(global_position.x, PLAYER_SIZE.x, WINDOW_SIZE.x - PLAYER_SIZE.x)
 	global_position.y = clamp(global_position.y, PLAYER_SIZE.y, WINDOW_SIZE.y - PLAYER_SIZE.y)
-	
+		
 	velocity = velocity.normalized()
 	global_position += SPEED * velocity * delta
+	
+	if last_position != global_position:
+		QuestManager.player_moved.emit()
+	
+	last_position = global_position
 	
 	if Input.is_action_pressed("click") and GameManager.node_creation_parent != null and can_shoot and !is_dead:
 		var bullet_instance = GameManager.instance_node(bullet, global_position, GameManager.node_creation_parent)

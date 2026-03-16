@@ -8,6 +8,8 @@ signal bullet_missed
 signal update_quest_label(new_text: String)
 signal start_grace_timer
 signal grace_timer_finished
+signal player_moved
+signal cursor_moved
 
 #VARS
 #consts
@@ -28,6 +30,7 @@ var target_color = "green"
 var time_limit = 55
 var quest_duration = 0
 var side_to_stay = "right"
+var time_cursor_to_be_stationary = 2
 	#done for a quest
 var enemies_killed = 0
 var powerups_collected = 0
@@ -49,6 +52,7 @@ func _ready() -> void:
 	quest_timer = Timer.new()
 	add_child(quest_timer)
 	quest_timer.one_shot = true
+	
 	#connect to signals
 	GameManager.start_quest.connect(generate_random_quest)
 	GameManager.reset_level.connect(reset_difficulty)
@@ -57,6 +61,8 @@ func _ready() -> void:
 	powerup_collected.connect(on_powerup_collected)
 	powerup_skipped.connect(on_powerup_skipped)
 	bullet_missed.connect(on_bullet_missed)
+	player_moved.connect(on_player_moved)
+	cursor_moved.connect(on_cursor_moved)
 	
 func _process(delta: float) -> void:
 	if is_process_active and quest_state == QuestState.ACTIVE:
@@ -73,7 +79,7 @@ func generate_random_quest():
 		player = GameManager.player
 		
 	#HRDCODED FOR TESTING replace with current_template = quest_templates.keys().pick_random()
-	current_template = "multi_kill"
+	current_template = "cursor_hold"
 	GameManager.quest_type = current_template
 	var template = quest_templates[current_template]
 	
@@ -85,12 +91,16 @@ func generate_random_quest():
 	
 	if current_template == "location_play":
 		start_location_quest()
-	elif current_template == "timed_no_kill" or current_template == "timed_only_kill":
-		start_no_only_kill()	
+	elif current_template == "timed_no_kill" or current_template == "timed_only_kill" or current_template == "accuracy":
+		start_base_timer(quest_duration)	
 	elif current_template == "combo_kill":
 		start_base()
 	elif current_template == "multi_kill":
 		start_multi_kill()
+	elif current_template == "no_move_kill":
+		start_base()
+	elif current_template == "cursor_hold":
+		start_base_timer(time_cursor_to_be_stationary)
 	
 func complete_quest():
 	quest_state = QuestState.FINISHED
@@ -116,6 +126,7 @@ func reset_difficulty():
 	time_limit = 55
 	quest_duration = 0
 	enemies_killed = 0
+	time_cursor_to_be_stationary = 2
 	
 #helper functions
 func populate_quest_vars():
@@ -131,9 +142,8 @@ func populate_quest_vars():
 		quest_duration += 5
 		time_left_in_quest = quest_duration
 		
-	elif current_template == "timed_no_kill":
+	elif current_template == "timed_no_kill" or current_template == "accuracy":
 		quest_duration += 5
-		
 	elif current_template == "timed_only_kill":
 		target_color = enemy_colors.pick_random()
 		quest_duration += 5
@@ -142,11 +152,13 @@ func populate_quest_vars():
 		quest_state = QuestState.ACTIVE
 	elif current_template == "powerup_skip":
 		quest_state = QuestState.ACTIVE
-	elif current_template == "combo_kill":
+	elif current_template == "combo_kill" or current_template == "no_move_kill":
 		increment_enemies_to_kill()
 	elif current_template == "multi_kill":
 		increment_enemies_to_kill()
 		time_limit -= 5
+	elif current_template == "cursor_hold":
+		time_cursor_to_be_stationary += 3
 		
 func increment_enemies_to_kill():
 	if enemies_to_kill <= MAX_ENEMIES_TO_KILL:
@@ -161,18 +173,20 @@ func update_quest_text():
 	elif current_template == "location_play":
 		quest_text = quest_text.replace("{side}", side_to_stay)
 		quest_text = quest_text.replace("{time}", str(quest_duration))
-	elif current_template == "timed_no_kill":
+	elif current_template == "timed_no_kill" or current_template == "accuracy":
 		quest_text = quest_text.replace("{time}", str(quest_duration))
 	elif current_template == "timed_only_kill":
 		quest_text = quest_text.replace("{color}", target_color)
 		quest_text = quest_text.replace("{time}", str(quest_duration))
 	elif current_template == "powerup_collect":
 		quest_text = quest_text.replace("{count}", str(powerups_to_collect))
-	elif current_template == "combo_kill":
+	elif current_template == "combo_kill" or current_template == "no_move_kill":
 		quest_text = quest_text.replace("{count}", str(enemies_to_kill))
 	elif current_template == "multi_kill":
 		quest_text = quest_text.replace("{count}", str(enemies_to_kill))
 		quest_text = quest_text.replace("{time}", str(time_limit))
+	elif current_template == "cursor_hold":
+		quest_text = quest_text.replace("{time}", str(time_cursor_to_be_stationary))
 		
 	update_quest_label.emit(quest_text)
 	
@@ -183,23 +197,25 @@ func start_base():
 	await grace_timer_finished
 	quest_state = QuestState.ACTIVE
 	
+func start_base_timer(time):
+	start_base()
+	quest_timer.wait_time = time
+	if !quest_timer.timeout.is_connected(complete_quest):
+		quest_timer.timeout.connect(complete_quest)
+	quest_timer.start()
+	
+	
 func start_location_quest():
 	start_base()
 	is_process_active = true
 	set_process(true)
-	
-func start_no_only_kill():
-	start_base()
-	quest_timer.wait_time = quest_duration
-	if !quest_timer.timeout.is_connected(complete_quest):
-		quest_timer.timeout.connect(complete_quest)
-	quest_timer.start()
 	
 func start_multi_kill():
 	start_base()
 	quest_timer.wait_time = time_limit
 	if !quest_timer.timeout.is_connected(fail_quest):
 		quest_timer.timeout.connect(fail_quest)
+		
 #quest-specific helper functions
 func check_side(delta):
 	if player.get_current_side() != side_to_stay:
@@ -229,7 +245,7 @@ func on_enemy_killed(color):
 		if color != target_color:
 			fail_quest()
 			
-	elif current_template == "combo_kill" or current_template == "multi_kill":
+	elif current_template == "combo_kill" or current_template == "multi_kill" or current_template == "no_move_kill":
 			enemies_killed += 1
 			
 			if enemies_killed >= enemies_to_kill:
@@ -261,7 +277,21 @@ func on_bullet_missed():
 	if quest_state != QuestState.ACTIVE:
 		return
 		
-	if current_template == "combo_kill":
+	if current_template == "combo_kill" or current_template == "accuracy":
+		fail_quest()
+		
+func on_player_moved():
+	if quest_state != QuestState.ACTIVE:
+		return
+		
+	if current_template == "no_move_kill":
+		fail_quest()
+		
+func on_cursor_moved():
+	if quest_state != QuestState.ACTIVE:
+		return
+		
+	if current_template == "cursor_hold":
 		fail_quest()
 		
 #system helper functions
@@ -274,3 +304,4 @@ func stop_timer_and_disconnect():
 		
 	if quest_timer.timeout.is_connected(fail_quest):
 		quest_timer.timeout.disconnect(fail_quest)
+	

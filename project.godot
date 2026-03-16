@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 
 GameManager="*uid://bd675xj68twxw"
 QuestTemplates="*uid://b7lkbp80tdc10"
+CursorTracker="*uid://bajb7yjs8385d"
 QuestManager="*uid://cavm72b8ptgj6"
 
 [display]
