@@ -17,7 +17,7 @@ const BLOOD_VALUE = 0.25
 	#other func's constants
 const SHAKE_INTENSITY = 3
 const DIFFICULTY_INTERVAL = 3.0
-const MAX_DIFFICULTY = 0.2
+const MAX_DIFFICULTY = 0.4
 #locals(for GameManager)/globals(for all nodes)
 var node_creation_parent = null
 var points = 0

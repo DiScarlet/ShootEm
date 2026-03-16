@@ -3,7 +3,7 @@ extends Sprite2D
 
 #VARS
 #CONSTS
-const LIFESPAN = 5.0
+const LIFESPAN = 8.0
 #exports
 @export var player_var_modify: String
 @export var player_var_set: float
@@ -22,6 +22,7 @@ func _ready() -> void:
 #event functions
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Player"):
+		print("POWERUP COLLECTED!")
 		var player = area.get_parent()
 		var timer = player.get_node("TimerPowerUp")
 		

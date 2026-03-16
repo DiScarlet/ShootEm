@@ -54,6 +54,9 @@ func _ready() -> void:
 	add_child(quest_timer)
 	quest_timer.one_shot = true
 	
+	#set variables
+	quest_state = QuestState.PREPARING
+	
 	#execute preparation functions
 	initialize_center_rect()
 	
@@ -92,8 +95,7 @@ func generate_random_quest():
 	else:
 		player = GameManager.player
 		
-	#HRDCODED FOR TESTING replace with current_template = quest_templates.keys().pick_random()
-	current_template = "border_only"
+	current_template = quest_templates.keys().pick_random()
 	GameManager.quest_type = current_template
 	var template = quest_templates[current_template]
 	
@@ -213,7 +215,7 @@ func start_base():
 	quest_state = QuestState.ACTIVE
 	
 func start_base_timer(time):
-	start_base()
+	await start_base()
 	quest_timer.wait_time = time
 	if !quest_timer.timeout.is_connected(complete_quest):
 		quest_timer.timeout.connect(complete_quest)
@@ -221,17 +223,16 @@ func start_base_timer(time):
 	
 	
 func start_location_quest():
-	start_base()
+	await start_base()
 	set_process(true)
 	
 func start_multi_kill():
-	start_base()
+	await start_base()
 	quest_timer.wait_time = time_limit
 	if !quest_timer.timeout.is_connected(fail_quest):
 		quest_timer.timeout.connect(fail_quest)
 		
 func start_center_border_only():
-	print("In start_center_border_only")
 	start_base_timer(quest_duration)
 	set_process(true)
 	
@@ -256,10 +257,8 @@ func get_in_center_zone():
 	var player_pos = player.global_position
 	
 	if center_rect.has_point(player_pos):
-		print("in center")
 		return true
 	else:
-		print("NOT in center")
 		return false
 		
 #player events functions

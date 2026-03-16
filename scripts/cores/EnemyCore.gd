@@ -17,20 +17,6 @@ var blood_particles = preload("res://scenes/blood_particles.tscn")
 @onready var current_color = modulate
 
 #FUNCS
-#system overrides
-func _process(_delta: float) -> void:
-	if hp <= 0:
-		if GameManager.camera != null:
-			GameManager.camera.screen_shake(GameManager.SHAKE_INTENSITY, 0.1)
-			
-		GameManager.points += 10
-		QuestManager.enemy_killed.emit(color_name)
-		if GameManager.node_creation_parent != null:
-			var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
-			blood_part_instance.rotation = velocity.angle()
-			blood_part_instance.modulate = Color.from_hsv(current_color.h, GameManager.BLOOD_SATURATION, GameManager.BLOOD_VALUE)
-		queue_free()
-		
 #action items
 func basic_movement_towards_player(delta: float) -> void:
 	if GameManager.player != null and stun == false:
@@ -40,14 +26,29 @@ func basic_movement_towards_player(delta: float) -> void:
 		velocity = lerp(velocity, Vector2(0, 0), 0.3)
 		global_position += velocity * delta
 	
+func check_for_death():
+	if hp <= 0:
+			if GameManager.camera != null:
+				GameManager.camera.screen_shake(GameManager.SHAKE_INTENSITY, 0.1)
+				
+			GameManager.points += 10
+			QuestManager.enemy_killed.emit(color_name)
+			if GameManager.node_creation_parent != null:
+				var blood_part_instance = GameManager.instance_node(blood_particles, global_position, GameManager.node_creation_parent)
+				blood_part_instance.rotation = velocity.angle()
+				blood_part_instance.modulate = Color.from_hsv(current_color.h, GameManager.BLOOD_SATURATION, GameManager.BLOOD_VALUE)
+			queue_free()
+
 #event functions
 	#custom 
 func on_damaged(stun_timer: Timer, damage):
-		modulate = Color(1, 1, 1)
-		velocity = -velocity * KNOCKBACK
-		hp -= damage
-		stun = true
-		stun_timer.start()
+	modulate = Color(1, 1, 1)
+	velocity = -velocity * KNOCKBACK
+	hp -= damage
+	stun = true
+	stun_timer.start()
+	
+	check_for_death()
 
 	#system
 func _on_hitbox_area_entered(area: Area2D) -> void:

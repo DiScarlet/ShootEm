@@ -5,6 +5,7 @@
 [node name="EnemyYellow" unique_id=81046350 instance=ExtResource("1_v200n")]
 modulate = Color(0.99215686, 0.9647059, 0.039215688, 1)
 SPEED = 50
-MAX_HP = 15
+MAX_HP = 10
 KNOCKBACK = 1000
+POINT_VALUE = 30
 color_name = "yellow"
