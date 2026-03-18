@@ -74,5 +74,5 @@ func _on_powerup_spawn_timer_timeout() -> void:
 func on_start_game():
 	enemy_spawn_timer.start()
 	interval_timer.start()
-	interval_timer.start()
+	powerup_spawn_timer.start()
 	GameManager.player.enabled = true

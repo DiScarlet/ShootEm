@@ -25,6 +25,8 @@ QuestManager="*uid://cavm72b8ptgj6"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 
@@ -71,4 +73,5 @@ click={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.07818208, 0.071919285, 0.08119676, 1)
