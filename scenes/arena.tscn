@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://b4ok3ievmdxys" path="res://scenes/enemies/enemy_blue.tscn" id="3_41jku"]
 [ext_resource type="PackedScene" uid="uid://dhh0qewrl521k" path="res://scenes/enemies/enemy_base.tscn" id="3_olpmc"]
 [ext_resource type="PackedScene" uid="uid://dryair0vs6tgf" path="res://scenes/enemies/enemy_yellow.tscn" id="4_k1k1x"]
-[ext_resource type="Script" uid="uid://q0l3nqxud6n2" path="res://scripts/UI/score.gd" id="4_xdvfk"]
 [ext_resource type="Script" uid="uid://bqbhw16j16xcc" path="res://scripts/UI/high_score.gd" id="5_4ag8t"]
 [ext_resource type="Script" uid="uid://b0xdbtaudahbx" path="res://scripts/camera_2d.gd" id="5_7ft05"]
 [ext_resource type="PackedScene" uid="uid://c7fd16v1dsogf" path="res://scenes/powerups/power_up.tscn" id="5_41jku"]
@@ -13,12 +12,28 @@
 [ext_resource type="Script" uid="uid://bi7yxc83hanjg" path="res://scripts/quests/quest_label.gd" id="10_k1k1x"]
 [ext_resource type="Script" uid="uid://djst5gdekcofa" path="res://scripts/quests/Additional_UI/grace_start_timer.gd" id="11_ajq0i"]
 [ext_resource type="AudioStream" uid="uid://c2v5pag0oebpj" path="res://assets/audio/music.mp3" id="13_8vbsj"]
+[ext_resource type="Script" uid="uid://bgxpfeujwd075" path="res://scripts/UI/main_menu.gd" id="13_ow1aj"]
+[ext_resource type="Texture2D" uid="uid://ffc4f5jllhlb" path="res://assets/images/textures/redSmear.png" id="14_a43o1"]
+[ext_resource type="Texture2D" uid="uid://b507xfurumq1i" path="res://assets/images/textures/blueSmear.png" id="14_xsx6r"]
+[ext_resource type="Texture2D" uid="uid://bohaw1wcc3b5a" path="res://assets/images/textures/MainBG.png" id="16_ow1aj"]
 
 [sub_resource type="Environment" id="Environment_wl4x5"]
 background_mode = 3
 glow_enabled = true
 glow_bloom = 0.37
 glow_blend_mode = 0
+
+[sub_resource type="GDScript" id="GDScript_6joey"]
+script/source = "extends Label
+
+#FUNCS
+#system overrides
+func _process(delta: float) -> void:
+	text = str(GameManager.points)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixwup"]
+bg_color = Color(0.32156864, 0.47843137, 0.6784314, 1)
 
 [node name="Arena" type="Node2D" unique_id=86317714]
 script = ExtResource("1_wl4x5")
@@ -28,24 +43,19 @@ power_ups = Array[PackedScene]([ExtResource("5_41jku"), ExtResource("6_41jku")])
 [node name="Player" parent="." unique_id=1334363141 instance=ExtResource("2_olpmc")]
 position = Vector2(640, 360)
 
-[node name="Enemy" parent="." unique_id=81046350 instance=ExtResource("3_olpmc")]
-position = Vector2(263, 369)
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1136972443]
 environment = SubResource("Environment_wl4x5")
 
 [node name="EnemySpawnTimer" type="Timer" parent="." unique_id=220998081]
 wait_time = 3.0
-autostart = true
 
 [node name="IntervalTimer" type="Timer" parent="." unique_id=1689908458]
-autostart = true
 
 [node name="PowerupSpawnTimer" type="Timer" parent="." unique_id=773368948]
 wait_time = 15.0
-autostart = true
 
 [node name="UI" type="Node2D" parent="." unique_id=1367308604]
+visible = false
 z_index = 20
 
 [node name="ScoreControl" type="Control" parent="UI" unique_id=1679407863]
@@ -65,7 +75,7 @@ grow_horizontal = 0
 theme_override_colors/font_color = Color(0.9510427, 0.7500664, 0.54699606, 1)
 theme_override_font_sizes/font_size = 50
 text = "100"
-script = ExtResource("4_xdvfk")
+script = SubResource("GDScript_6joey")
 
 [node name="HighScoreVal" type="Label" parent="UI/ScoreControl" unique_id=2140397873]
 layout_mode = 1
@@ -173,8 +183,80 @@ script = ExtResource("5_7ft05")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1531487500]
 stream = ExtResource("13_8vbsj")
 autoplay = true
+parameters/looping = true
+
+[node name="MainMenu" type="Control" parent="." unique_id=377361924]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+script = ExtResource("13_ow1aj")
+
+[node name="Play" type="Node2D" parent="MainMenu" unique_id=1052612274]
+position = Vector2(35, 21)
+
+[node name="PlayButton" type="Button" parent="MainMenu/Play" unique_id=669018485]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 447.0
+offset_top = 220.0
+offset_right = 793.0
+offset_bottom = 297.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_pressed_color = Color(0.7471869, 0.9999998, 0.99968165, 1)
+theme_override_colors/font_hover_color = Color(0.7490196, 1, 1, 1)
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_ixwup")
+text = "Play"
+flat = true
+
+[node name="bg" type="Sprite2D" parent="MainMenu/Play" unique_id=1021529317]
+z_index = -2
+position = Vector2(630, 257)
+scale = Vector2(0.34146136, 0.43917274)
+texture = ExtResource("14_a43o1")
+
+[node name="Exit" type="Node2D" parent="MainMenu" unique_id=1849341021]
+position = Vector2(20, -40)
+
+[node name="bg" type="Sprite2D" parent="MainMenu/Exit" unique_id=1459251504]
+z_index = -2
+position = Vector2(647, 459)
+scale = Vector2(0.34146136, 0.43917274)
+texture = ExtResource("14_xsx6r")
+
+[node name="ExitButton" type="Button" parent="MainMenu/Exit" unique_id=254901589]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 468.0
+offset_top = 426.0
+offset_right = 792.0
+offset_bottom = 503.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_pressed_color = Color(0.8580561, 0.9999998, 0.8198646, 1)
+theme_override_colors/font_hover_color = Color(0.85882354, 1, 0.81960785, 1)
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_ixwup")
+text = "Exit"
+flat = true
+
+[node name="SpriteBG" type="Sprite2D" parent="MainMenu" unique_id=33460670]
+z_index = -4
+position = Vector2(662.622, 357.5)
+scale = Vector2(1.2986349, 1.2986349)
+texture = ExtResource("16_ow1aj")
 
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
 [connection signal="timeout" from="IntervalTimer" to="." method="_on_interval_timer_timeout"]
 [connection signal="timeout" from="PowerupSpawnTimer" to="." method="_on_powerup_spawn_timer_timeout"]
 [connection signal="timeout" from="Camera2D/ScreenShakeTimer" to="Camera2D" method="_on_screen_shake_timer_timeout"]
+[connection signal="pressed" from="MainMenu/Play/PlayButton" to="MainMenu" method="_on_play_button_pressed"]
+[connection signal="pressed" from="MainMenu/Exit/ExitButton" to="MainMenu" method="_on_exit_button_pressed"]

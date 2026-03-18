@@ -11,16 +11,23 @@ const ENEMY_SPAWN_OFFSET = 160
 #Godot elements
 @onready var interval_timer: Timer = $IntervalTimer
 @onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
+@onready var powerup_spawn_timer: Timer = $PowerupSpawnTimer
+@onready var main_menu: Control = $MainMenu
+@onready var ui: Node2D = $UI
 
 
 #FUNCS
 #system overrides
 func _ready() -> void:
+	GameManager.player.enabled = false
+	main_menu.visible = true
+	ui.visible = false
 	GameManager.node_creation_parent = self
-	GameManager.start_quest.emit()
 	GameManager.points = 0
 	interval_timer.wait_time = GameManager.DIFFICULTY_INTERVAL
-
+	GameManager.start_game.connect(on_start_game)
+	
+	
 func _exit_tree() -> void:
 	GameManager.node_creation_parent = null
 
@@ -62,3 +69,10 @@ func _on_powerup_spawn_timer_timeout() -> void:
 	var powerup_ind = randi_range(0, power_ups.size() - 1)
 
 	GameManager.instance_node(power_ups[powerup_ind], Vector2(randi_range(0, WINDOW_SIZE.x), randi_range(0, WINDOW_SIZE.y)), self)
+
+
+func on_start_game():
+	enemy_spawn_timer.start()
+	interval_timer.start()
+	interval_timer.start()
+	GameManager.player.enabled = true

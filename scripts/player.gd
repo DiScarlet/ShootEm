@@ -22,6 +22,16 @@ var default_damage = damage
 #Godot elements
 @onready var timer_reload: Timer = $TimerReload
 
+#FIELDS
+var enabled: bool = true:
+	set(value):
+		enabled = value
+		set_physics_process(value)
+		set_process(value)
+		set_process_input(value)
+		visible = value
+		print("player " + str(value))
+
 
 #FUNCS
 #system overrides
